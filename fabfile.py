@@ -58,10 +58,11 @@ def install_unifispot():
     run('apt-get install python-dev libmysqlclient-dev python-pip git bc nginx -y') 
     run('pip install -U pip')    
     with cd("/usr/share/nginx/"):
-        run('mkdir -p unifispot/instance')
-        run('touch unifispot/instance/__init__.py')
-        run(' cp instance_sample.py /usr/share/nginx/unifispot/instance/config.py')
-    with cd("/usr/share/nginx/unifispot"):
+        run('git clone git@github.com:unifispot/poppet.git')
+        run('mkdir -p puppet/instance')
+        run('touch puppet/instance/__init__.py')
+        run(' cp instance_sample.py /usr/share/nginx/puppet/instance/config.py')
+    with cd("/usr/share/nginx/puppet"):
         run('mkdir -p unifispot/static/uploads/')
         run('pip install virtualenv')
         run('virtualenv .env')
@@ -73,10 +74,10 @@ def install_unifispot():
     run('chown -R www-data:www-data /var/log/uwsgi')   
     run('mkdir -p /etc/uwsgi && sudo mkdir -p /etc/uwsgi/vassals')
     run('rm -rf /etc/uwsgi/vassals/uwsgi.ini ')
-    run('ln -s /usr/share/nginx/unifispot/uwsgi.ini /etc/uwsgi/vassals')
-    run('chown -R www-data:www-data /usr/share/nginx/unifispot')
+    run('ln -s /usr/share/nginx/puppet/uwsgi.ini /etc/uwsgi/vassals')
+    run('chown -R www-data:www-data /usr/share/nginx/puppet')
     run('chown -R www-data:www-data /var/log/uwsgi/')
-    run('cp /usr/share/nginx/unifispot/uwsgi.conf /etc/init/')
+    run('cp /usr/share/nginx/puppet/uwsgi.conf /etc/init/')
     run('rm -rf /etc/nginx/sites-enabled/default')
     with cd('/etc/nginx/sites-available'):
         run('cp wifiapp.conf /etc/nginx/sites-available/wifiapp.conf')
