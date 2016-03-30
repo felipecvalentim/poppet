@@ -34,6 +34,9 @@ def client_index(siteid=None):
     #Validate SiteID
     if not siteid:
         wifisite        = Wifisite.query.filter_by(client_id=current_user.id).first()
+        if not wifisite:
+            current_app.logger.debug("No sites found for userid:%s"%(current_user.id))
+            abort(404)            
         siteid          = wifisite.id
     else:
         wifisite        = Wifisite.query.filter_by(id=siteid).first()
@@ -50,23 +53,7 @@ def client_index(siteid=None):
     return render_template("client/dashboard.html",siteid=siteid,user_form=user_form,site_form=site_form,site_count=site_count,visit_count=visit_count,wifisite=wifisite)
 
 
-@bp.route('/')
-@bp.route('/<siteid>')
-@client_required
-def client_settings(siteid=None):
-    #Validate SiteID
-    if not siteid:
-        wifisite        = Wifisite.query.filter_by(client_id=current_user.id).first()
-        siteid          = wifisite.id
-    else:
-        wifisite        = Wifisite.query.filter_by(id=siteid).first()
-        if not wifisite or wifisite.client_id != current_user.id:
-            current_app.logger.debug("Site Manage URL called with invalid paramters siteid:%s userid:%s"%(siteid,current_user.id))
-            abort(404)
 
-    user_form = UserForm()
-    
-    return render_template("client/dashboard.html",siteid=siteid,user_form=user_form,wifisite=wifisite)
 
 
   
@@ -77,6 +64,9 @@ def client_data(siteid=None):
     #Validate SiteID
     if not siteid:
         wifisite        = Wifisite.query.filter_by(client_id=current_user.id).first()
+        if not wifisite:
+            current_app.logger.debug("No sites found for userid:%s"%(current_user.id))
+            abort(404)             
         siteid          = wifisite.id
     else:
         wifisite        = Wifisite.query.filter_by(id=siteid).first()
@@ -96,6 +86,9 @@ def client_vouchers(siteid=None):
     #Validate SiteID
     if not siteid:
         wifisite        = Wifisite.query.filter_by(client_id=current_user.id).first()
+        if not wifisite:
+            current_app.logger.debug("No sites found for userid:%s"%(current_user.id))
+            abort(404)             
         siteid          = wifisite.id
     else:
         wifisite        = Wifisite.query.filter_by(id=siteid).first()
