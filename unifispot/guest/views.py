@@ -96,7 +96,7 @@ def guest_portal(site_id):
             guest_device = Device(mac=device_mac,site=landing_site,state=DEVICE_INIT)
             landing_site.devices.append(guest_device)
             if demo:
-                guest_session.demo = 1            
+                guest_device.demo = 1            
             db.session.add(guest_device)
             guest_device.sessions.append(guest_session)
         db.session.commit()
@@ -485,7 +485,7 @@ def voucher_login(track_id):
     current_app.logger.debug('Wifiguest Log - Site ID:%s voucher_login  for track ID:%s'%(guest_track.site_id,guest_track.id))
     #
     #Check if the device already has a valid auth
-    if  guest_device.state == DEVICE_VOUCHER_AUTH and guest_device.demo == False:
+    if  guest_device.state == DEVICE_VOUCHER_AUTH and guest_device.demo == 0:
         #Device has a guest element and is authorized before
         #check if the voucher is valid still
         expiry = arrow.get(guest_device.expires_at).timestamp

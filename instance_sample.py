@@ -10,7 +10,7 @@ SECURITY_EMAIL_SENDER = 'no-reply@unifispot.local'
 ADMINS = ['admin@unifispot.local']
 
 
-DATA_INIT = True
+
 
 HASH_SALT = 'HG6fgdtad67qtegdygdwuy'
 

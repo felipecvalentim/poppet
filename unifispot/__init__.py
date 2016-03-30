@@ -64,24 +64,7 @@ def create_app(mode="development"):
     with app.app_context():
         from importlib import import_module
         import_module('unifispot.middleware')
-        if  app.config['DATA_INIT']:
-            from  sqlalchemy.exc import OperationalError    
-            from flask.ext.security.utils import encrypt_password
-            from unifispot.models import User       
-            try:
-                account = Account.query.filter_by(id=1).first()
-            except :
-                app.logger.debug( "No Account table Entry found,could be running migration ")
-            else:
-                if not account:
-                    #create default admin user
-                    enc_pass        = encrypt_password('password')
-                    account         = Account()
-                    db.session.add(account)
-                    admin_user = Admin(email='admin@admin.com',password=enc_pass,displayname= "Admin User",active=1)
-                    admin_user.account = account
-                    db.session.add(admin_user)
-                    db.session.commit()
+
                    
 
     @app.route("/")
