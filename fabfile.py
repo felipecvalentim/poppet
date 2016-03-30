@@ -11,15 +11,15 @@ def remote_hostname():
     return run('hostname')
 
 def apt_get(*packages):
-    sudo('apt-get -y --no-upgrade install %s' % ' '.join(packages), shell=False)
+    run('apt-get -y --no-upgrade install %s' % ' '.join(packages), shell=False)
 
 def apt_get_update():
-    sudo('apt-get update')
+    run('apt-get update')
 
 
 def install_nginx():
     with settings(hide('warnings', 'stderr'), warn_only=True):
-        result = sudo('dpkg-query --show nginx')
+        result = run('dpkg-query --show nginx')
     if result.failed is False:
         warn('nginx is already installed')
         return    
@@ -27,7 +27,7 @@ def install_nginx():
 
 def install_mysql_server():
     with settings(hide('warnings', 'stderr'), warn_only=True):
-        result = sudo('dpkg-query --show mysql-server')
+        result = run('dpkg-query --show mysql-server')
     if result.failed is False:
         warn('mysql-server is already installed')
         return    
@@ -35,7 +35,7 @@ def install_mysql_server():
 
 def install_redis():
     with settings(hide('warnings', 'stderr'), warn_only=True):
-        result = sudo('dpkg-query --show redis-server')
+        result = run('dpkg-query --show redis-server')
     if result.failed is False:
         warn('redis-server is already installed')
         return    
@@ -43,7 +43,7 @@ def install_redis():
 
 def install_supervisor():
     with settings(hide('warnings', 'stderr'), warn_only=True):
-        result = sudo('dpkg-query --show supervisor')
+        result = run('dpkg-query --show supervisor')
     if result.failed is False:
         warn('supervisor is already installed')
         return    
@@ -72,7 +72,7 @@ def install_unifispot():
     #configure uwsgi
     run('mkdir -p /var/log/uwsgi')
     run('chown -R www-data:www-data /var/log/uwsgi')   
-    run('mkdir -p /etc/uwsgi && sudo mkdir -p /etc/uwsgi/vassals')
+    run('mkdir -p /etc/uwsgi && run mkdir -p /etc/uwsgi/vassals')
     run('rm -rf /etc/uwsgi/vassals/uwsgi.ini ')
     run('ln -s /usr/share/nginx/puppet/uwsgi.ini /etc/uwsgi/vassals')
     run('chown -R www-data:www-data /usr/share/nginx/puppet')
