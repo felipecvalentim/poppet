@@ -1,0 +1,6 @@
+#SQLALCHEMY_ECHO = True
+ASSETS_DEBUG = True
+DEBUG = False
+NO_UNIFI = True
+WTF_CSRF_ENABLED = False
+DATA_INIT = False

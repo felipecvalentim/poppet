@@ -1,0 +1,203 @@
+{% extends "admin/base.html" %}
+{%from "form_macros.html" import render,full_modal_iframe,render_vertical %}
+
+{% block css_block %}
+    {% assets "landing_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}    
+    {% assets "fileupload_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
+
+    <style>
+        .scrollable{
+            height:500px;
+            overflow-y: auto; 
+
+
+        }
+    </style>
+{%endblock%}
+
+{% block title %}
+    Landing Page
+{%endblock %}
+
+{% block left_menu %}
+    <li >
+        <a href="{{url_for('admin.admin_site',site_id=site_id)}}"><i class="fa fa-dashboard"></i> <span class="nav-label">Dashboard</span></a>
+    </li>
+    <li class="active" >
+         <a href="{{url_for('admin.admin_landing',site_id=site_id)}}"><i class="fa fa-desktop"></i> <span class="nav-label">Landing Page</span> </a>
+
+    </li>
+    <li>
+         <a href="#" id='site-manage'><i class="fa fa-edit"></i> <span class="nav-label">Manage</span> </a>
+    </li>
+     <li >
+        <a href="{{url_for('admin.client_data',site_id=site_id)}}"><i class="fa fa-desktop"></i> <span class="nav-label">Guest Info</span></a>
+    </li>
+    {% if wifisite.voucher_login_en() %}
+     <li >
+        <a href="{{url_for('admin.client_vouchers',site_id=site_id)}}"><i class="fa fa-diamond"></i> <span class="nav-label">Vouchers</span></a>
+    </li>
+    {% endif %}  
+
+{%endblock%}
+
+{%block main_content %}
+    {{full_modal_iframe("landingmodal-preview-modal","")}}
+    <div class="row">
+        <div class="col-md-4">       
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Landing Page</h5>
+                    <div class="ibox-tools">
+                        <a class="btn btn-primary" id="landingpageform-save">Save </a>
+                        <a class="btn btn-primary" id="landingpageform-demo"  href="{{url_for('guest.guest_portal',site_id=wifisite.unifi_id,id='ff:ff:11:22:33:44',ap='ff:af:11:22:33:44',demo='1')}}"  target="_blank">Demo </a>
+                        
+                    </div>
+                </div>
+                <div class="ibox-content scrollable">
+                    <form role="form" id="landingfilesform" method="post">
+                         
+                         {{ render_vertical(landingfilesform) }}
+                    </form>
+                    {% if wifisite.template =='template1' %}
+                    <a class="btn btn-primary btn-sm" id="edit_togle" value='simple'>More </a>
+                    {% endif %}
+                    <div id="full_landing"  >
+                        <form role="form" id="landingpageform" method="post">
+                            {{ render_vertical(landingpageform) }}
+
+                        </form>
+                    </div>
+                    
+                    <div id="simple_landing">
+                        <form role="form" id="simplelandingpageform" method="post">
+                            {{ render_vertical(simplelandingpageform) }}
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8" id="preview-frame"> 
+            <iframe src="/admin/preview/{{site_id}}" width="100%" height="900" frameborder="0" id="preview-iframe" ></iframe>           
+        </div>
+    </div> 
+   
+
+{%endblock%}
+
+
+{% block js_block %}
+    {% assets "landing_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}    
+    {% assets "fileupload_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+        <!-- Page-Level Scripts -->
+    <script>
+        $(document).ready(function() {
+            create_site_menu(siteid={{site_id}});
+            $('body').addClass('mini-navbar')
+
+            var landingpageform = new AjaxForm('landingpageform',"{{url_for('client.landingpage_api',siteid=site_id,id=landingpageid)}}");             
+
+
+            $("#full_landing :input").change(function() {
+                redraw_preview();
+            });
+            $("#simple_landing :input").change(function() {
+                repopulate_landingpage();
+                redraw_preview();
+            });
+
+             $('#full_landing').hide();
+
+            var logofileupload = new FilesUpload('logofile',"{{url_for('client.sitefile_api',siteid=site_id)}}",'logofile','landingpageform');
+
+            var bgfile = new FilesUpload('bgfile',"{{url_for('client.sitefile_api',siteid=site_id)}}",'bgfile','landingpageform');
+            var tosfile = new FilesUpload('tosfile',"{{url_for('client.sitefile_api',siteid=site_id)}}",'tosfile','landingpageform');
+
+           
+             $('#edit_togle').click(function(e){
+                e.preventDefault(); 
+                if ( $(this).attr('value') == 'simple' ){
+                    $('#full_landing').show();
+                    $('#simple_landing').hide();
+                    $('#edit_togle').attr('value','advanced');
+                    $('#edit_togle').text('Less');
+                }else{
+                    $('#full_landing').hide();
+                    $('#simple_landing').show();
+                    $('#edit_togle').attr('value','simple');
+                    $('#edit_togle').text('More');
+
+                }
+
+            });
+
+            $('#bgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#topbgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#toptextcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#middlebgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#middletextcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#middletextcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#bottombgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#bottomtextcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#footerbgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#footertextcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#btnbgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#btntxtcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#btnlinecolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });            
+            $('#pagebgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#pagebgcolor1').colorpicker().on('changeColor.colorpicker', function(event){
+                repopulate_landingpage();
+                redraw_preview();
+            });
+            $('#gridbgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                repopulate_landingpage();
+                redraw_preview();
+            });
+            $('#textcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                repopulate_landingpage();
+                redraw_preview();
+            });
+            
+
+            
+         });
+    </script>
+{%endblock%}

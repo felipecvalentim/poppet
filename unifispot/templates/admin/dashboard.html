@@ -1,0 +1,124 @@
+{% extends "admin/base.html" %}
+
+{% block css_block %}
+    {% assets "datatable_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
+{%endblock%}
+
+{% block title %}
+    Dashboard
+{%endblock %}
+
+{% block left_menu %}
+    <li class="active">
+        <a href="{{url_for('admin.admin_index')}}"><i class="fa fa-dashboard"></i> <span class="nav-label">Dashboard</span></a>
+    </li>
+    <li>
+         <a href="{{url_for('admin.admin_clients')}}"><i class="fa fa-flask"></i> <span class="nav-label">Clients</span> </a>
+    </li>       
+    <li >
+         <a href="{{url_for('admin.admin_admins')}}"><i class="fa fa-diamond"></i> <span class="nav-label">Admins</span> </a>
+    </li>    
+    <li>
+         <a href="{{url_for('admin.admin_settings')}}"><i class="fa fa-edit"></i> <span class="nav-label">Settings</span> </a>
+    </li>
+ 
+
+{%endblock%}
+
+{%block main_content %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Access Points</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                   <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="ap-table" >
+                            <thead>
+                                <tr>
+                                    <th>AP MAC</th>
+                                    <th>AP Name</th>
+                                    <th>Site</th>
+                                    <th>State</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Guests</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                   <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="guest-table">
+                            <thead>
+                                <tr>
+                                    <th>Site</th>
+                                    <th>AP</th>
+                                    <th>Device MAC</th>
+                                    <th>RSSI</th>
+                                    <th>Uptime</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{%endblock%}
+
+
+{% block js_block %}
+    {% assets "datatable_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+        <!-- Page-Level Scripts -->
+    <script>
+        $(document).ready(function() {
+          // $('.dataTables-example').DataTable();
+            create_site_menu(siteid=0);
+            $('#ap-table').DataTable({
+                "ajax": "/admin/ap/api/",
+                 });
+            $('#guest-table').DataTable({
+                "ajax": "/admin/device/api/",
+                 });            
+         });
+    </script>
+{%endblock%}

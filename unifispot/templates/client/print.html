@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta http-equiv="x-ua-compatible" content="IE=8">
+	<title>Vouchers</title>
+<style type="text/css">
+body {
+	font-size: 1.4em; 
+	font-family: "Times New Roman", Times, serif !important;
+}
+
+div.voucher {
+	display:inline-block;
+	margin: 2px;
+	padding: 10px;
+	text-align: center;
+	border: 1px dashed #000;
+}
+
+div.voucher p {
+	margin: 0;
+}
+
+p.valid { 
+	text-decoration:underline; 
+	color: #666666; 
+}
+p.code { 
+	font-weight:bold;
+	padding-top: 10px;
+	font-size:larger;
+}
+
+</style>
+<style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -100px !important;
+    width: 200px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+</style></head>
+<body onload="self.focus(); window.print()">
+{% for item in vouchers %}
+<div class="voucher">
+	<p class="valid">Valid for {{item.duration}}</p>
+	<p class="code">{{item.voucher}}</p>
+</div>
+{% endfor%}
+</body></html>

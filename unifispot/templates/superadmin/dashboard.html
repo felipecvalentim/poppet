@@ -1,0 +1,89 @@
+{% extends "superadmin/base.html" %}
+
+{% block css_block %}
+    {% assets "datatable_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
+{%endblock%}
+
+{% block title %}
+    Dashboard
+{%endblock %}
+
+{% block left_menu %}
+    <li class="active">
+        <a href="{{url_for('superadmin.superadmin_index')}}"><i class="fa fa-dashboard"></i> <span class="nav-label">Dashboard</span></a>
+    </li>
+    <li  >
+         <a href="{{url_for('superadmin.superadmin_accounts')}}"><i class="fa fa-flask"></i> <span class="nav-label">Accounts</span> </a>
+    </li>     
+    <li >
+         <a href="{{url_for('superadmin.superadmin_admins')}}"><i class="fa fa-diamond"></i> <span class="nav-label">Admins</span> </a>
+    </li>    
+{%endblock%}
+
+{%block main_content %}
+    <div class="row">
+        <div class="col-md-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-right">Total</span>
+                    <h5>Sites</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">N/A</h1>                                    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">Today</span>
+                    <h5>Visits</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">N/A</h1>                                    
+                </div>
+            </div>
+        </div> 
+        <div class="col-md-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">Monthly</span>
+                    <h5>Guests</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">N/A</h1>                                    
+                </div>
+            </div>
+        </div>   
+        <div class="col-md-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">Monthly</span>
+                    <h5>Devices</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">N/A</h1>                                    
+                </div>
+            </div>
+        </div>                  
+    </div>    
+
+ 
+
+{%endblock%}
+
+
+{% block js_block %}
+    {% assets "datatable_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+        <!-- Page-Level Scripts -->
+    <script>
+        $(document).ready(function() {
+         
+         });
+    </script>
+{%endblock%}

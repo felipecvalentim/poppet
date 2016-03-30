@@ -1,0 +1,124 @@
+{%from 'form_macros.html' import modal_form,flash_message,render_wifisite%}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %} {% endblock %}</title>
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    {% assets "global_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
+
+     {% assets "wizard_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}   
+    <!-- END GLOBAL MANDATORY STYLES -->
+    {% block css_block %}
+
+    {%endblock%}
+
+</head>
+
+<body >
+
+<div id="wrapper">
+
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{current_user.displayname}}</strong>
+                             </span> <span class="text-muted text-xs block">{{current_user.email}}<b class="caret"></b></span> </span> </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a href="{{url_for('security.logout')}}">Logout</a></li>
+                            </ul>
+                    </div>
+                    <div class="logo-element">
+                        IN+
+                    </div>
+                </li>
+                {% block left_menu %}
+
+                {% endblock %}
+            </ul>
+
+        </div>
+    </nav>
+
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message">Welcome to UnifiSpot</span>
+                    </li>
+                    <li class="dropdown " id='site-list'>
+                        {%block site_select %}
+                        {%endblock%}
+                    </li>
+                    <li>
+                        <a href="#" id="usermodal-edit"><i class="fa fa-cog"></i></a>
+                    </li>
+                    <li>
+                        <a href="{{url_for('security.logout')}}">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        
+        <div class="wrapper wrapper-content animated fadeInRight">
+            {{modal_form(user_form,"usermodal","User Details")}}
+            {{flash_message()}}
+            {%block main_content %}
+
+            {%endblock%}
+        </div>
+        <div class="footer">
+            <div class="pull-right">
+                
+            </div>
+            <div>
+                <strong>Copyright</strong> Unifispot &copy; 2015-2016
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+{% assets "core_js" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+
+{% endassets %}
+{% assets "wizard_js" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+
+{% endassets %}
+<script>
+    $(document).ready(function() {
+        var userform = new ModalForm("{{url_for('admin.user_api',id=current_user.id)}}",'usermodal');
+        
+
+
+     });
+</script>
+<!-- END CORE PLUGINS -->
+{% block js_block %}
+
+{%endblock%}
+</body>
+
+</html>

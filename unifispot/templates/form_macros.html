@@ -1,0 +1,537 @@
+{% macro render(form) -%}
+
+{{form.hidden_tag() }}
+{% for field in form %}
+{% if field.type not in ['CSRFTokenField', 'HiddenField']%}
+    <div class="form-group {% if field.errors %}error{% endif %}" id="{{field.id}}-form-group">
+	<label class="col-sm-4 control-label" >{{ field.label(for=field.id) }}</label>
+    {% if field.type == 'TextAreaField'%}
+        <div class="col-xs-8">
+            {{ field(class_="form-control",rows=5)}}
+        </div>
+	{% elif field.type == 'SelectMultipleField1'%}
+        <div class="col-xs-8">
+		{% for value, label, _ in field.iter_choices() %}
+        	<div class="checkbox">
+            	<label>
+                	<input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">	{{ label }}
+                </label>
+        	</div>
+    		{% endfor %}
+        </div>
+	{% elif field.type == 'MultiListTable' %}
+        <div class="col-xs-8">
+        {% for value, label, _ in field.iter_choices() %}
+            <div class="checkbox">
+            <label>
+                    <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">   {{ label }}
+             </label>
+            </div>
+        
+        {% endfor %}
+        </div>
+    {% elif field.type == 'FileField' %}
+        <div class="col-sm-8">
+            {{ field(class_="form-control",**{'data-url':request.script_root+"/upload/"})}}
+            <img id="imgpreview" src="#" style="visibility: hidden;" class="img-thumbnail">
+            <div id="progress">
+                <div class="bar" style="width: 0%;background: green;height: 18px;"></div>
+            </div>
+        </div>
+    {% elif field.type == 'BooleanField' %}
+        <div class="col-md-8">
+            <div class="checkbox-list">
+            <label>
+                    <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="1"> 
+             </label>
+            </div>       
+        </div>
+    {%else%} 
+
+	
+		<div class="col-sm-4">
+	        {{ field(class_="form-control")}}
+		</div>
+	{%endif%}
+        {% if field.errors %}
+              {% for error in field.errors %}
+               <span class="help-inline text-red"><strong>[{{ error }}]</strong></span><br>
+              {% endfor %}
+        {% endif %}
+    </div>
+ {% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% macro render_vertical(form) -%}
+
+{{form.hidden_tag() }}
+{% for field in form %}
+{% if field.type not in ['CSRFTokenField', 'HiddenField']%}
+    <div class="form-group {% if field.errors %}error{% endif %}">
+    <label class="control-label" >{{ field.label(for=field.id) }}</label> 
+                {% if field.type == 'FileField' %}  
+                        <a href="#" id="remove-{{ field.id }}"><i class="fa fa-times"></i></a> {%endif%}
+    {% if field.type == 'TextAreaField'%}
+        <div >
+            {{ field(class_="form-control",rows=5)}}
+        </div>
+    {% elif field.type == 'SelectMultipleField1'%}
+        <div >
+        {% for value, label, _ in field.iter_choices() %}
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">   {{ label }}
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+        </div>
+    {% elif field.type == 'FileField' %}
+        <div >
+            {{ field()}}
+
+        </div>
+{% elif field.type == 'BooleanField' %}
+    <div class="col-md-8">
+        <div class="checkbox-list">
+        <label>
+                <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="1"> 
+         </label>
+        </div>       
+    </div>
+{%else%}  
+    
+        <div >
+            {{ field(class_="form-control")}}
+        </div>
+    {%endif%}
+        {% if field.errors %}
+              {% for error in field.errors %}
+               <span class="help-inline text-red"><strong>[{{ error }}]</strong></span><br>
+              {% endfor %}
+        {% endif %}
+    </div>
+ {% endif %}
+{% endfor %}
+{% endmacro %}
+
+
+{% macro modal_form(form,name,title) -%}
+<div class="row">
+    <div class="col-md-12">
+        <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">{{title}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form" id="{{name}}-form">
+                            {{render(form)}}
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                        <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
+    <!-- /.col-md12 -->
+</div>
+<!-- /.row -->
+{% endmacro %}
+
+{% macro full_modal_form(form,name,title) -%}
+<div class="row">
+    <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal-dialog modal-full">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">{{title}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form class="form-horizontal" role="form" id="{{name}}-form">
+                                {{render(form)}}
+                            </form>
+                        </div>
+                        <!-- /.col-md6 -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                    <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>
+<!-- /.row -->
+<!-- /.modal -->
+
+{% endmacro %}
+
+{% macro modal_landing_form(form,name,title) -%}
+<div class="row">
+    <div class="col-md-12">
+        <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">{{title}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form" id="{{name}}-form">
+                            {{render(form)}}
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                        <button type="button" class="btn blue" id="{{name}}-save-button">Save </button>
+                        <button type="button" class="btn blue" id="{{name}}-preview-button">Save & Preview</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
+    <!-- /.col-md12 -->
+</div>
+<!-- /.row -->
+{% endmacro %}
+
+{% macro full_modal_iframe(name,title) -%}
+<div class="row">
+    <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">{{title}}</h4>
+                </div>
+                <div class="modal-body" id="{{name}}-body">
+                     <iframe src="" style="zoom:0.60" width="99.6%" height="250" frameborder="0"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>
+<!-- /.row -->
+<!-- /.modal -->
+
+{% endmacro %}
+
+{% macro fields_errors() %}
+{% for field in varargs %}
+{% if field.errors %}
+  {% for error in field.errors %}
+    
+      <div class="alert alert-danger">{{error}}</div>
+   
+  {% endfor %}
+{% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% macro modal_form_voucher(form,name,title) -%}
+<div class="row">
+    <div class="col-md-12">
+        <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">{{title}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form" id="{{name}}-form">
+                            {{form.hidden_tag() }}
+                            <div class="form-group" id="number-form-group">
+                                <label class="col-md-4  control-label" >{{ form.number.label(for=form.number.id) }}</label>
+                                <div class="col-md-2">{{ form.number(class_="form-control ")}}</div>
+                            </div>
+                            <div class="form-group" id="duration-form-group">
+                                <label class="col-md-4  control-label" >{{ form.duration.label(for=form.duration.id) }}</label>
+                                <div class="col-md-2">{{ form.duration(class_="form-control ")}}</div>
+                                <div class="col-md-4">{{ form.duration_t(class_="form-control ")}}</div>
+                            </div>    
+                            <div class="form-group" id="notes-form-group">
+                                <label class="col-md-4  control-label" >{{ form.notes.label(for=form.notes.id) }}</label>
+                                <div class="col-md-8">{{ form.notes(class_="form-control ")}}</div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                        <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
+    <!-- /.col-md12 -->
+</div>
+<!-- /.row -->
+{% endmacro %}
+
+{% macro flash_message() -%}
+{%- with messages = get_flashed_messages(with_categories=true) -%}
+        {%- if messages -%}
+
+            {%- for category, message in messages -%}
+                <div class="alert alert-{{category}} alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+
+                    {{ message }}
+
+                </div>
+            {%- endfor -%}
+{%- endif -%}
+{%- endwith %}
+{% endmacro %}
+
+{% macro render_field_with_erros(field,required='0') -%}
+<div class="form-group {% if field.errors %}error{% endif %}" id="{{field.id}}-form-group">
+<label class="col-md-4  control-label" >{{ field.label(for=field.id) }}</label>
+{% if field.type == 'TextAreaField'%}
+    <div class="col-md-8">
+        {{ field(class_="form-control",rows=5)}}
+    </div>
+{% elif field.type == 'MultiListTable' %}
+    <div class="col-md-8">
+    {% for value, label, _ in field.iter_choices() %}
+        <div class="checkbox">
+        <label>
+                <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">   {{ label }}
+         </label>
+        </div>    
+    {% endfor %}
+    </div>
+{% elif field.type == 'BooleanField' %}
+    <div class="col-md-8">
+        <div class="checkbox-list">
+        <label>
+                <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="1"> 
+         </label>
+        </div>       
+    </div>
+{%else%}    
+    <div class="col-md-8">
+        {% if required == '1' %}
+            {{ field(class_="form-control required")}}
+        {%else%}
+            {{ field(class_="form-control ")}}
+        {%endif%}
+    </div>
+{%endif%}
+{% if field.errors %}
+      {% for error in field.errors %}
+       <span class="help-inline text-red"><strong>[{{ error }}]</strong></span><br>
+      {% endfor %}
+{% endif %}
+</div>
+{% endmacro %}
+
+
+
+{% macro render_wifisite(form) -%}
+
+<div class="row">
+    <div class="modal fade" id="wifisitemodal" tabindex="-1" role="basic" aria-hidden="true" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">Wifisite Configuration </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form class="wizard-big form-horizontal" role="form" id="wifisitemodal-form" action="{{url_for('client.wifisite_api')}}">
+                            {{form.hidden_tag() }}
+                            <h1>Account</h1>
+                            <fieldset>
+                                <h2>Account Information</h2>
+                                <div class="row">
+
+                                        {{render_field_with_erros(form.client_id,required='1')}}
+                                        {{render_field_with_erros(form.unifi_id,required='1')}}
+                                        {{render_field_with_erros(form.name,required='1')}}
+                                        {{render_field_with_erros(form.timezone,required='1')}}
+
+
+                                </div>
+                            </fieldset>      
+                            <h1>Authentication</h1>
+                            <fieldset>
+                                <h2>How do guests Login to Your Portal?</h2>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        {{render_field_with_erros(form.auth_fb)}}
+                                        {{render_field_with_erros(form.auth_email)}}
+                                        {{render_field_with_erros(form.auth_voucher)}}
+                                        {{render_field_with_erros(form.auth_phone)}}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-center">
+                                            <div style="margin-top: 20px">
+                                                <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>       
+                            <h1>Social Login</h1>
+                            <fieldset>
+                                <h2>Social Login Info</h2>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        {{render_field_with_erros(form.fb_page)}}
+                                        {{render_field_with_erros(form.auth_fb_like)}}
+                                        {% if current_user.account.en_fbauth_change %}
+                                            {{render_field_with_erros(form.fb_app_secret)}}
+                                            {{render_field_with_erros(form.fb_appid)}}
+                                        {%endif%}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-center">
+                                            <div style="margin-top: 20px">
+                                                <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>       
+                            <h1>Extra Fields</h1>
+                            <fieldset>
+                                <h2>Select Fields to collect data</h2>
+                                <div class="row">
+                                    <div class="col-lg-8">                                        
+                                        {{render_field_with_erros(form.get_firstname)}}
+                                        {{render_field_with_erros(form.get_lastname)}}
+                                        {{render_field_with_erros(form.template)}}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-center">
+                                            <div style="margin-top: 20px">
+                                                <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            {% if current_user.account.en_reporting %}
+                            <h1>Reports</h1>
+                            <fieldset>
+                                <h2>Client Reporting Info</h2>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        {{render_field_with_erros(form.reports_type)}}
+                                        {{render_field_with_erros(form.reports_list)}}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-center">
+                                            <div style="margin-top: 20px">
+                                                <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>         
+                            {%endif%}                                                                  
+                            {% if current_user.account.en_api_export %}
+                            <h1>Export Via API</h1>
+                            <fieldset>
+                                <h2>Export Guest Info to API</h2>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        {{render_field_with_erros(form.api_export)}}
+                                        {{render_field_with_erros(form.api_auth_field1)}}
+                                        {{render_field_with_erros(form.api_auth_field2)}}
+                                        {{render_field_with_erros(form.api_auth_field3)}}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-center">
+                                            <div style="margin-top: 20px">
+                                                <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset> 
+                            {%endif %}
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>
+<!-- /.row -->
+<!-- /.modal -->
+
+
+{% endmacro %}
+
+
+{% macro render_unifi_settings() -%}
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" >Unifi Controller </label>
+    <div class="col-xs-8"> <label id="unifi_server" > </label></div>
+
+</div>
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" >Unifi Controller IP </label>
+    <div class="col-xs-8"> <label id="unifi_server_ip" > </label></div>
+
+</div>
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" >Unifi Admin </label>
+    <div class="col-xs-8"> <label id="unifi_user" > </label></div>
+
+</div>
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" >Unifi Password </label>
+    <div class="col-xs-8"> 
+        <label id="unifi_pass" ></label>
+        <a class="btn btn-primary" id="unifipass-show">Show</a>
+        
+
+
+    </div>
+
+</div>
+
+{% endmacro %}

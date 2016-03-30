@@ -1,0 +1,10 @@
+*.pyc
+instance/*
+migrations/*
+migrations_test/*
+.project
+.pydevproject
+*.swp
+*.log
+logs/*
+unifispot/static/uploads/*

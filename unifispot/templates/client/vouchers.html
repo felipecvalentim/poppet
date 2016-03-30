@@ -1,0 +1,97 @@
+{% extends "client/base.html" %}
+{%from 'form_macros.html' import modal_form_voucher%}
+{% block css_block %}
+    {% assets "datatable_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+        <style>
+        #vouchertable{
+             font-family: "Times New Roman", Times, serif !important;
+
+        }
+        </style>
+    {% endassets %}
+{%endblock%}
+
+{% block title %}
+    Guest Data
+{%endblock %}
+
+{% block left_menu %}
+    <li >
+        <a href="{{url_for('client.client_index')}}"><i class="fa fa-dashboard"></i> <span class="nav-label">Dashboard</span></a>
+    </li>
+     <li>
+        <a href="{{url_for('client.client_data')}}"><i class="fa fa-desktop"></i> <span class="nav-label">Guest Info</span></a>
+    </li>
+    {% if wifisite.auth_method == 4 %}
+     <li  class="active">
+        <a href="{{url_for('client.client_vouchers')}}"><i class="fa fa-diamond"></i> <span class="nav-label">Vouchers</span></a>
+    </li>
+    {% endif %}
+ 
+
+{%endblock%}
+
+{%block main_content %}
+  
+    <div class="row">
+        {{modal_form_voucher(voucher_form,"vouchermodal","Vouchers")}}
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Vouchers</h5>
+                    <div class="ibox-tools">
+                         <a class="btn btn-primary" id="vouchermodal-add-new">Create </a>
+                         <a class="btn btn-primary" href="{{url_for('client.client_print',siteid=siteid)}}" target='_blank'>Print Unused </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                   <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover " id="vouchertable" style="font-family: 'Times New Roman', Times, serif !important;">
+                            <thead>
+                                <tr>
+                                    <th>Site</th>
+                                    <th>Voucher</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                    <th>Note</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{%endblock%}
+
+
+{% block js_block %}
+    {% assets "datatable_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+        <!-- Page-Level Scripts -->
+    <script>
+        $(document).ready(function() {
+          // $('.dataTables-example').DataTable();
+            create_client_site_menu(siteid={{siteid}});
+        var users_table = new DataTableWithEdit("vouchertable",{
+                "processing": true,
+                "serverSide": true,
+                "responsive": true,
+                "ajax": "/client/site/{{siteid}}/voucher/api/"},
+                "/client/site/{{siteid}}/voucher/api/",
+                'vouchermodal');
+
+        
+         });
+    </script>
+{%endblock%}

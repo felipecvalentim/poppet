@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Welcome To Our Hotspot</title>
+
+    <style>
+    html {
+        background: {%if landing_page.bgfile%}url( {{  landing_page.bgfile}}) no-repeat center center fixed{%endif%}{%if landing_page.pagebgcolor%} {{landing_page.pagebgcolor}} {%endif%} ; 
+        -webkit-background-size: 100% 100% !important;
+        -moz-background-size: 100% 100% !important;
+        -o-background-size: 100% 100% !important;
+        background-size: 100% 100% !important;
+    }
+    html,body,section{height:100%;}
+    body {  
+
+        font-family: "Open Sans",serif;
+        background: transparent !important;
+    }
+    .vertical-offset-100 {
+        padding-top: 100px;
+    }
+    .img-responsive {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: auto;
+    }    
+    .no-bg{
+
+        background: transparent !important;
+        border:0 !important;
+    }
+    .panel {
+    background: transparent !important;
+    margin-bottom: 20px;
+    
+    }
+    .panel-heading {
+        border:0 !important;
+    }
+    .powered{
+        padding-top: 20px;
+        font-family: "Open Sans",serif;
+        font-size:10px;
+
+    }
+
+    .powered-text{
+
+        font-family: "Open Sans",serif;
+        font-size:10px;
+
+    }
+    .signin {
+        padding-top: 20px;
+
+
+    }    
+
+    .btn-email {
+        background-color: #1b9af5;
+        border-color: #1b9af5;
+        color: #FFFFFF;       
+    }    
+    .btn-phone {
+        background-color: #268263;
+        border-color: #268263;
+        color: #FFFFFF;       
+    }    
+    .btn-fb {
+        background-color: #3b5b96;
+        border-color: #3b5b96;
+        color: #FFFFFF;       
+    }    
+    
+    .btn-voucher {
+        background-color: #eb583b;
+        border-color: #eb583b;
+        color: #FFFFFF;       
+    }        
+    .btn-back {
+        background-color: #fff;
+        border-color: #fff;
+        color: #000;       
+    }        
+    input{
+      -moz-border-radius: 6px !important;;
+        border-radius: 6px !important;;
+        padding:5px;
+    }
+    .btn-phone:hover {
+        color: #000 !important;
+
+    }
+    </style>
+
+
+    <link href="{{ url_for('static', filename='guest/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+    <!-- font Awesome -->
+    <link href="{{ url_for('static', filename='guest/font-awesome/css/font-awesome.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{ url_for('static', filename='guest/css/style.css')}}" rel="stylesheet" type="text/css" />
+
+</head>
+<body >
+<body >
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+        <div>
+            <div>
+                <img src="{%if landing_page.logofile%}{{  landing_page.logofile }}{%endif%}" class="img-responsive" alt="Conxole Admin"/>
+
+            </div>
+            </br>
+            
+            <form class="m-t" role="form">
+            <div id="first">
+                    <p class='login-text'><strong>Please Choose a Login Method</strong></p>
+                    {% if landing_site.email_login_en() %}
+                    <a  class="btn btn-email block full-width m-b" href="{{url_for('guest.email_login',track_id=track_id)}}" id="email-select">
+                        <i class="fa fa-envelope"> </i><strong> Email Address </strong>
+                    </a>
+                    {% endif %}
+                    {% if landing_site.phone_login_en() %}
+                    <a  class="btn btn-phone block full-width m-b" id="phone-select" href="{{url_for('guest.sms_login',track_id=track_id)}}">
+                        <i class="fa fa-phone-square"> </i> <strong>Phone Number</strong>
+                    </a>
+                    {% endif %}
+                    {% if landing_site.fb_login_en() %}
+                    <a  class="btn btn-fb block full-width m-b" id="fb-select"  href="{{url_for('guest.social_login',track_id=track_id)}}"  >
+                        <i class="fa fa-facebook-square"> </i> <strong>Facebook</strong>
+                    </a>
+                    {% endif %}
+                    {% if landing_site.voucher_login_en() %}
+                    <a  class="btn btn-voucher block full-width m-b" id="voucher-select"  href="{{url_for('guest.voucher_login',track_id=track_id)}}">
+                        <i class="fa fa-money"> </i> <strong>Voucher</strong>
+                    </a>    
+                    {% endif %}            
+            </div>
+            </form>
+            
+            <p class='login-text'><small>Powered By <a href="http://unifispot.com"title="Captive portal with Socil Login and Data collection" target="_blank">Unifispot</a></small></p>
+            <p class="m-t"> <small>By Logging In You agree to our <a href="{{landing_page.tosfile}}"> Terms and Condisions</a> And <a href="{{landing_page.tosfile}}">Privacy Policy</a></small> </p>
+            
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+     <script src="{{ url_for('static', filename='guest/js/jquery-2.0.2.min.js')}}" type="text/javascript"></script>
+       <!-- Bootstrap -->
+        <script src="{{ url_for('static', filename='guest/js/bootstrap.min.js')}}" type="text/javascript"></script>
+
+        <script>
+            jQuery(document).ready(function() {
+               
+
+            });
+        </script>
+</body>
+
+</html>

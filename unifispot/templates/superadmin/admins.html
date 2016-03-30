@@ -1,0 +1,82 @@
+{% extends "superadmin/base.html" %}
+
+{% block css_block %}
+    {% assets "datatable_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
+{%endblock%}
+
+{% block title %}
+    Dashboard
+{%endblock %}
+
+{% block left_menu %}
+    <li >
+        <a href="{{url_for('superadmin.superadmin_index')}}"><i class="fa fa-dashboard"></i> <span class="nav-label">Dashboard</span></a>
+    </li>
+    <li  >
+         <a href="{{url_for('superadmin.superadmin_accounts')}}"><i class="fa fa-flask"></i> <span class="nav-label">Accounts</span> </a>
+    </li>       
+    <li class="active" >
+         <a href="{{url_for('superadmin.superadmin_admins')}}"><i class="fa fa-diamond"></i> <span class="nav-label">Admins</span> </a>
+    </li>    
+
+{%endblock%}
+
+{%block main_content %}
+    <div class="row">
+        {{modal_form(admin_form,"admineditmodal","Admin Details")}}
+        <div class="col-md-9">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Admins</h5>
+                    <div class="ibox-tools">
+                        <a class="btn btn-primary" id="admineditmodal-add-new">New Admin </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                   <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="admins-table" >
+                            <thead>
+                                <tr>
+                                    <th>Displayname</th>
+                                    <th>Email</th>
+                                    <th>Account</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>          
+        </div>                  
+    </div>    
+
+
+{%endblock%}
+
+
+{% block js_block %}
+    {% assets "datatable_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+        <!-- Page-Level Scripts -->
+    <script>
+        $(document).ready(function() {
+
+
+
+        var users_table = new DataTableWithEdit("admins-table",{
+                "processing": true,
+                "serverSide": true,
+                "responsive": true,
+                "ajax": "{{url_for('superadmin.admin_api')}}"},
+                "{{url_for('superadmin.admin_api')}}",
+                'admineditmodal');
+    });
+    </script>
+{%endblock%}

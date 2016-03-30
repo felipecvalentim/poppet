@@ -1,0 +1,104 @@
+{% extends "admin/base.html" %}
+{%from "form_macros.html" import render,render_unifi_settings %}
+
+{% block css_block %}
+    {% assets "datatable_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
+{%endblock%}
+
+{% block title %}
+    Dashboard
+{%endblock %}
+
+{% block left_menu %}
+    <li>
+        <a href="{{url_for('admin.admin_index')}}"><i class="fa fa-dashboard"></i> <span class="nav-label">Dashboard</span></a>
+    </li>
+    <li>
+         <a href="{{url_for('admin.admin_clients')}}"><i class="fa fa-flask"></i> <span class="nav-label">Clients</span> </a>
+    </li>      
+    <li >
+         <a href="{{url_for('admin.admin_admins')}}"><i class="fa fa-diamond"></i> <span class="nav-label">Admins</span> </a>
+    </li>    
+    <li class="active">
+        <a href="{{url_for('admin.admin_settings')}}"><i class="fa fa-edit"></i> <span class="nav-label">Settings</span> </a>
+    </li>
+
+{%endblock%}
+
+{%block main_content %}
+    {{modal_form(settingsform,"settingseditmodal","Unifi Controller Password")}}
+    <div class="row">
+        <div class="col-md-12">       
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Settings</h5>
+                    <div class="ibox-tools">
+                        <a class="btn btn-primary" id="settingseditmodal-edit">Edit </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal">
+                        {{ render_unifi_settings() }}
+
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+    </div>    
+
+
+
+{%endblock%}
+
+
+{% block js_block %}
+    {% assets "datatable_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+        <!-- Page-Level Scripts -->
+    <script>
+        $(document).ready(function() {
+            $('.dataTables-example').DataTable();
+            var wifisiteform = new ModalForm("{{url_for('admin.settings_api')}}",'settingseditmodal');
+            // populate settings
+
+            $('#unifi_pass').hide();
+            $.ajax({
+                type: 'get',
+                url: "{{url_for('admin.settings_api')}}",
+                data: {},
+                success: function(data) {
+                    if (data.status) {
+                        $('#unifi_pass').html(data.data.unifi_pass);
+                        $('#unifi_server').html(data.data.unifi_server);
+                        $('#unifi_server_ip').html(data.data.unifi_server_ip);
+                        $('#unifi_user').html(data.data.unifi_user);
+                    
+                    }
+                    else{
+                            toastr.options= toastr_options;
+                            var $toast = toastr['error']("ERROR", data.msg);               
+                    }
+                }
+            });
+            $('#unifipass-show').click(function(e) {
+                if ($(this).text() == "Show"){
+                    $('#unifi_pass').show();
+                    $(this).text('Hide');
+                }
+                else{
+                    $('#unifi_pass').hide();
+                    $(this).text('Show');
+
+                }
+            });
+
+            
+         });
+    </script>
+{%endblock%}

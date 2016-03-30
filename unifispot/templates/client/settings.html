@@ -1,0 +1,68 @@
+{% extends "client/base.html" %}
+{%from "form_macros.html" import render %}
+
+{% block css_block %}
+    {% assets "datatable_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
+{%endblock%}
+
+{% block title %}
+    Dashboard
+{%endblock %}
+
+{% block left_menu %}
+    <li >
+        <a href="{{url_for('client.client_index')}}"><i class="fa fa-dashboard"></i> <span class="nav-label">Dashboard</span></a>
+    </li>
+     
+    <li class="active">
+         <a href="{{url_for('client.client_settings')}}"><i class="fa fa-edit"></i> <span class="nav-label">Settings</span> </a>
+    </li>
+
+{%endblock%}
+
+{%block main_content %}
+    <div class="row">
+        <div class="col-md-12">       
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Settings</h5>
+                    <div class="ibox-tools">
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal" id="settingsform" method="post">
+                        {{ render(settingsform) }}
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">                                       
+                                <button class="btn btn-primary" type="submit" id="settingsform-save">Save changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+    </div>    
+
+
+
+{%endblock%}
+
+
+{% block js_block %}
+    {% assets "datatable_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+        <!-- Page-Level Scripts -->
+    <script>
+        $(document).ready(function() {
+            create_client_site_menu(siteid={{siteid}});
+            var wifisiteform = new AjaxForm('settingsform',"{{url_for('admin.settings_api')}}");
+            
+         });
+    </script>
+{%endblock%}

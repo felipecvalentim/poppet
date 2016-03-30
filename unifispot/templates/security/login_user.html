@@ -1,0 +1,60 @@
+{% from "form_macros.html" import fields_errors,flash_message %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>Login</title>
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    {% assets "global_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
+    <!-- END GLOBAL MANDATORY STYLES -->
+
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+        <div>
+            <div>
+                                            {{flash_message()}}
+                <h1 class="logo-name"></h1>
+
+            </div>
+            <h3>Welcome to Unifispot</h3>
+            <p>Hotspot Management System.
+                <!--Continually expanded and constantly improved Inspinia Admin Them (IN+)-->
+            </p>
+            <p>Login in. To see it in action.</p>
+            <form class="m-t" role="form" action="{{ url_for_security('login') }}" method="post">
+                {{ login_user_form.hidden_tag() }}
+                {{ fields_errors(login_user_form.email, login_user_form.password) }}
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="Username" required="" name="email" id="email">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Password" required="" name="password" id="password">
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
+                <a href="{{ url_for_security('forgot_password') }}">
+                            <small>Forgot password?</small>
+                        </a>
+            </form>
+            
+        </div>
+    </div>
+
+<!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+{% assets "core_js" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+<!-- END CORE PLUGINS -->
+</body>
+
+</html>

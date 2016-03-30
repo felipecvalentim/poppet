@@ -1,0 +1,18 @@
+
+{% macro render_guest(form) -%}
+
+{{form.hidden_tag() }}
+{% for field in form %}
+{% if field.type not in ['CSRFTokenField', 'HiddenField']  %}
+<!--  {{ field() }}-->
+<div class="form-group {% if field.errors %}error{% endif %}" id="{{field.id}}-form-group">
+      {{ field(class_="form-control", placeholder=field.label.text)}}
+        {% if field.errors %}
+          {% for error in field.errors %}
+           <span class="alert alert-danger">[{{ error }}]</span><br>
+          {% endfor %}
+        {% endif %}
+ </div><!-- //form-group-->
+{% endif %}
+{% endfor %}
+{%endmacro%}

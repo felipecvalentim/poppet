@@ -1,0 +1,4 @@
+
+#SQLALCHEMY_ECHO = True
+ASSETS_DEBUG = True 
+DEBUG = True
