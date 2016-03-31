@@ -41,4 +41,35 @@ def init_data():
                 db.session.add(admin_user)
                 db.session.commit()
 
+@manager.command
+def demo_init():
+    with app.app_context():
+        from  sqlalchemy.exc import OperationalError    
+        from flask.ext.security.utils import encrypt_password
+        from unifispot.models import User  
+        from unifispot.superadmin.models import Account
+        from unifispot.admin.models import Admin       
+        from unifispot.client.models import Client       
+        try:
+            account = Account.query.filter_by(id=1).first()
+        except :
+            app.logger.debug( "No Account table Entry found,could be running migration ")
+        else:
+            if not account:
+                #create default admin user
+                enc_pass        = encrypt_password('password')
+                account         = Account()
+                db.session.add(account)
+                admin_user  = Admin(email='admin@admin.com',password=enc_pass,displayname= "Admin User1",active=1)
+                admin_user2 = Admin(email='admin2@admin.com',password=enc_pass,displayname= "Admin User2",active=1)
+                admin_user3 = Admin(email='admin3@admin.com',password=enc_pass,displayname= "Admin User3",active=1)
+                admin_user.account = account
+                admin_user2.account = account
+                admin_user3.account = account
+                db.session.add(admin_user)
+                db.session.add(admin_user2)
+                db.session.add(admin_user3)
+                db.session.commit()
+
+
 manager.run()

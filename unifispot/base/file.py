@@ -49,9 +49,9 @@ class FileAPI(MethodView):
             file.save(full_file_name)
             rel_filepath = '/static/'+self.upload_folder +'/'+ filename
             #upload to S3
-            self.push_file_to_s3(full_file_name,rel_filepath)
+            filetype = self.check_file_typ(filename)            
             if current_app.config['UPLOAD_TO_S3']:
-                filetype = self.check_file_typ(filename)
+                self.push_file_to_s3(full_file_name,rel_filepath)
             if filetype == FILE_TYPE_IMAGE: 
                 pass         
                 #self.generate_and_save_thumbnail(filename,thumbsize=256)      
