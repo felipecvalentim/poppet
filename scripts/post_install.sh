@@ -1,7 +1,7 @@
 
 
-BUILDDIR=/tmp/poppet_build/poppet
-CONFFILE=/tmp/poppet_build/poppet/instance/config.py
+BUILDDIR=/usr/share/nginx/poppet
+CONFFILE=/usr/share/nginx/poppet/instance/config.py
 
 cd "$BUILDDIR"
 
@@ -26,9 +26,6 @@ fi
 .env/bin/python manage.py db upgrade
 .env/bin/python manage.py init_data
 
-
-mkdir -p /var/log/uwsgi
-chown -R www-data:www-data /var/log/uwsgi
 mkdir -p /etc/uwsgi
 mkdir -p /etc/uwsgi/vassals
 rm -rf /etc/uwsgi/vassals/uwsgi.ini
