@@ -74,6 +74,8 @@ def create_app(mode="development"):
             return redirect(url_for('admin.admin_index'))
         elif current_user.type =='client':
             return redirect(url_for('client.client_index'))     
+        elif current_user.type =='superadmin':
+            return redirect(url_for('superadmin.superadmin_index'))               
         else:
             app.logger.error("Unknown User Type!! for ID:%s"%current_user.id)
             abort(400)
