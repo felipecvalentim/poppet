@@ -73,5 +73,19 @@ def demo_init():
                 db.session.add(admin_user3)
                 db.session.commit()
 
+@manager.command
+def demo_superadmin():
+    with app.app_context():
+        from  sqlalchemy.exc import OperationalError    
+        from flask.ext.security.utils import encrypt_password
+        from unifispot.models import User  
+        from unifispot.superadmin.models import Account,Superadmin
+        from unifispot.admin.models import Admin       
+        from unifispot.client.models import Client   
+        #create default admin user
+        enc_pass        = encrypt_password('password')
+        super_admin = Superadmin(email='super@unifispot.com',password=enc_pass,displayname= "Super Admin",active=1)
+        db.session.add(super_admin)
+        db.session.commit()        
 
 manager.run()
