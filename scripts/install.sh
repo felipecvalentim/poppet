@@ -1,5 +1,6 @@
 CONFFILE=/usr/share/nginx/poppet/instance/config.py
 
+apt-get update
 apt-get install nginx redis-server mysql-server mysql-client python-dev libmysqlclient-dev python-pip git -y
 
 
