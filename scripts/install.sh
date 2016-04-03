@@ -1,15 +1,43 @@
-BUILDDIR=/usr/share/nginx/poppet
 CONFFILE=/usr/share/nginx/poppet/instance/config.py
 
-cd "$BUILDDIR"
+apt-get update
+apt-get install nginx redis-server mysql-server mysql-client python-dev libmysqlclient-dev python-pip git -y
+
+
+cd /usr/share/nginx
+echo "------------------------------Getting latest Source files----------------------------"
+
+if [  -d poppet ]; then
+    cd poppet
+    git pull
+else 
+    git clone https://github.com/unifispot/poppet.git
+    cd poppet
+fi
+
+
+echo "------------------------------Create new venv and activate----------------------------"
+pip install virtualenv
+virtualenv .env
+source .env/bin/activate
+
+echo "------------------------------Install all dependencies----------------------------"
+pip install -r requirements.txt
+mkdir -p instance
+mkdir -p logs
+mkdir -p touch instance/__init__.py
+mkdir -p unifispot/static/uploads/
+
 
 if [ ! -d migrations ]; then
+    cp instance_sample.py instance/config.py 
     .env/bin/python manage.py db init
 
 fi
 
 #Check if DB is properly configured
-if  ! .env/bin/python manage.py db current >/dev/null 2>/dev/null  ; then  
+if  ! .env/bin/python manage.py db current >/dev/null 2>/dev/null  ; then 
+
     read -p "Please Enter your MySQL Host name [localhost]: " host
     host=${host:-localhost}
     read -p "Please Enter your MySQL Root Username [root]: " username
@@ -38,5 +66,5 @@ rm -rf /etc/nginx/sites-enabled/default
 cp wifiapp.conf /etc/nginx/sites-available/wifiapp.conf
 ln -s /etc/nginx/sites-available/wifiapp.conf /etc/nginx/sites-enabled/wifiapp
 
-
-
+service uwsgi restart
+service nginx restart
