@@ -7,7 +7,7 @@ CSRF_ENABLED = True
 
 #configure blue prints 
 
-BLUEPRINTS = ('client','guest','admin')
+BLUEPRINTS = ('client','guest','admin','superadmin')
 
 
 
